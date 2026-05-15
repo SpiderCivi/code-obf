@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -ExecutionPolicy Bypass -File .\\\\obfuscate.ps1 -Mode deobfuscate -FilePath \"C:\\\\Users\\\\civie\\\\Desktop\\\\sus-lib\\\\payload.js\" -KeyFile \"C:\\\\Users\\\\civie\\\\Desktop\\\\code-obf.key\" -Password \"Spidercivi20039!\")",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:/Users/civie/Desktop/CODE-OBF/obfuscate.ps1\" -Mode deobfuscate -FilePath \"C:/Users/civie/Desktop/sus-lib/payload.js\" -KeyFile \"C:/Users/civie/Desktop/code-obf.key\" -Password \"Spidercivi20039!\")",
+      "Bash(grep -n '\\\\$pwd' C:/Users/civie/Desktop/CODE-OBF/obfuscate.ps1)",
+      "Bash(grep -n '\\\\$pwd\\\\|\\\\$Pwd' C:/Users/civie/Desktop/CODE-OBF/obfuscate.ps1)",
+      "Bash(grep -n '^\"@\\\\|\"@$' \"C:/Users/civie/Desktop/CODE-OBF/obfuscate.ps1\")",
+      "Bash(awk 'NR==189 || NR==190 || NR==191' \"C:/Users/civie/Desktop/CODE-OBF/obfuscate.ps1\")",
+      "Bash(xxd)",
+      "Bash(powershell -Command \"\\(Get-Content -Raw obfuscate.ps1\\) -replace \\\\\"\\\\`n\\\\\", \\\\\"\\\\`r\\\\`n\\\\\" -replace \\\\\"\\\\`r\\\\`r\\\\`n\\\\\", \\\\\"\\\\`r\\\\`n\\\\\" | Set-Content -NoNewline -Encoding UTF8 obfuscate.ps1\")",
+      "Bash(awk 'NR==190' \"C:/Users/civie/Desktop/CODE-OBF/obfuscate.ps1\")",
+      "Bash(dd if=\"C:/Users/civie/Desktop/CODE-OBF/obfuscate.ps1\" bs=1 skip=8000 count=300)",
+      "Bash(awk 'NR>=188 && NR<=192' \"C:/Users/civie/Desktop/CODE-OBF/obfuscate.ps1\")",
+      "Bash(powershell -Command '$x=@\" *)",
+      "Bash(awk 'NR==189 || NR==190' \"C:/Users/civie/Desktop/CODE-OBF/obfuscate.ps1\")",
+      "Bash(python -c ' *)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:/Users/civie/Desktop/CODE-OBF/test_fn.ps1\")",
+      "Bash(python deobf.py \"C:/Users/civie/Desktop/sus-lib/payload.js\" \"C:/Users/civie/Desktop/code-obf.key\" \"Spidercivi20039!\")"
+    ]
+  }
+}

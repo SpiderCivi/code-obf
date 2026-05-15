@@ -1,0 +1,10 @@
+node_modules/
+dist/
+target/
+.env
+*.log
+.DS_Store
+build/
+__pycache__/
+*.pkl
+.venv/
