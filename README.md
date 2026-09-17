@@ -40,14 +40,14 @@ python C:\Users\civie\Desktop\mio-progetto\dist\main.py
 
 ## Table of Contents
 
-1. [How to OBFUSCATE a project](#come-obfuscare-un-progetto)
-2. [How to RUN obfuscated files](#come-eseguire-i-file-obfuscati)
-3. [How to DEOBFUSCATE a file](#come-deofuscare-un-file)
-4. [Which mode to choose](#quale-modalità-scegliere)
-5. [Does the code still work after obfuscation?](#il-codice-funziona-ancora-dopo-lobfuscazione)
-6. [Full CLI parameters](#parametri-cli-completi)
-7. [How it works (technical)](#come-funziona-tecnico)
-8. [Requirements](#requisiti)
+1. [How to OBFUSCATE a project](#how-to-obfuscate-a-project)
+2. [How to RUN obfuscated files](#how-to-run-obfuscated-files)
+3. [How to DEOBFUSCATE a file](#how-to-deobfuscate-a-file)
+4. [Which mode to choose](#which-mode-to-choose)
+5. [Does the code still work after obfuscation?](#does-the-code-still-work-after-obfuscation)
+6. [Full CLI parameters](#full-cli-parameters)
+7. [How it works (technical)](#how-it-works-technical)
+8. [Requirements](#requirements)
 
 ---
 
