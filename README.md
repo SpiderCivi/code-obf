@@ -1,18 +1,18 @@
-# CODE-OBF v3 — Obfuscator con Keyfile, Password o 2FA
+# CODE-OBF v3 — Obfuscator with Keyfile, Password, or 2FA
 
-Obfuscatore con **crittografia reale** (SHA256-CTR + HMAC-SHA256 + PBKDF2-200k). Tre modalità di autenticazione a scelta:
+Obfuscator with **real encryption** (SHA256-CTR + HMAC-SHA256 + PBKDF2-200k). Three authentication modes to choose from:
 
-| Mode | Cosa serve per eseguire/deofuscare |
+| Mode | What you need to run/deobfuscate |
 |---|---|
-| **keyfile** | un file `.key` (custodito da te) |
-| **password** | una password (nella tua testa o in variabile d'ambiente) |
-| **both** (2FA) | keyfile **E** password (massima sicurezza) |
+| **keyfile** | a `.key` file (kept safe by you) |
+| **password** | a password (in your head or in an environment variable) |
+| **both** (2FA) | keyfile **AND** password (maximum security) |
 
-**Linguaggi supportati:** `.py` `.js` `.mjs` `.ts` `.ps1` `.sh`
+**Supported languages:** `.py` `.js` `.mjs` `.ts` `.ps1` `.sh`
 
 ---
 
-## Partenza veloce (TL;DR)
+## Quick start (TL;DR)
 
 ```powershell
 # 1. OBFUSCA un progetto
@@ -38,37 +38,37 @@ python C:\Users\civie\Desktop\mio-progetto\dist\main.py
 
 ---
 
-## Indice
+## Table of Contents
 
-1. [Come OBFUSCARE un progetto](#come-obfuscare-un-progetto)
-2. [Come ESEGUIRE i file obfuscati](#come-eseguire-i-file-obfuscati)
-3. [Come DEOFUSCARE un file](#come-deofuscare-un-file)
-4. [Quale modalità scegliere](#quale-modalità-scegliere)
-5. [Il codice funziona ancora dopo l'obfuscazione?](#il-codice-funziona-ancora-dopo-lobfuscazione)
-6. [Parametri CLI completi](#parametri-cli-completi)
-7. [Come funziona (tecnico)](#come-funziona-tecnico)
-8. [Requisiti](#requisiti)
+1. [How to OBFUSCATE a project](#come-obfuscare-un-progetto)
+2. [How to RUN obfuscated files](#come-eseguire-i-file-obfuscati)
+3. [How to DEOBFUSCATE a file](#come-deofuscare-un-file)
+4. [Which mode to choose](#quale-modalità-scegliere)
+5. [Does the code still work after obfuscation?](#il-codice-funziona-ancora-dopo-lobfuscazione)
+6. [Full CLI parameters](#parametri-cli-completi)
+7. [How it works (technical)](#come-funziona-tecnico)
+8. [Requirements](#requisiti)
 
 ---
 
-## Come OBFUSCARE un progetto
+## How to OBFUSCATE a project
 
-### Modo interattivo (consigliato la prima volta)
+### Interactive mode (recommended for the first time)
 
 ```powershell
 cd C:\Users\civie\Desktop\CODE-OBF
 .\obfuscate.ps1
 ```
 
-Lo script ti chiede in sequenza:
+The script asks you, in sequence:
 
 1. **Auth mode** → `1` keyfile, `2` password, `3` both
-2. **PATH PROGETTO** → cartella sorgenti, es. `C:\Users\civie\Desktop\mio-progetto`
-3. **OUTPUT PATH** → dove mettere i file cifrati (default: `PROGETTO\dist`)
-4. **KEYFILE path** (se Auth = keyfile o both) → dove creare/trovare il file `.key`
-5. **Password** (se Auth = password o both) → la digiti due volte per conferma
+2. **PROJECT PATH** → source folder, e.g. `C:\Users\civie\Desktop\mio-progetto`
+3. **OUTPUT PATH** → where to put the encrypted files (default: `PROGETTO\dist`)
+4. **KEYFILE path** (if Auth = keyfile or both) → where to create/find the `.key` file
+5. **Password** (if Auth = password or both) → you type it twice to confirm
 
-### Modo non-interattivo (per script / automazioni)
+### Non-interactive mode (for scripts / automation)
 
 ```powershell
 # Auth keyfile (random)
@@ -89,24 +89,24 @@ $env:CODE_OBF_PASS = "la-mia-password-lunga"
                 -KeyFile     "C:\Users\civie\secrets\code-obf.key"
 ```
 
-### Cosa produce
+### What it produces
 
-- I file `.py` `.js` `.mjs` `.ts` `.ps1` `.sh` della tua cartella diventano **wrapper cifrati** nella `dist/` (stessa struttura di sottocartelle)
-- Il keyfile (se richiesto) viene creato dove hai indicato
-- I file di config (`.env`, `.json`, `.yml`, `.sql`) restano **non obfuscati** (devono essere leggibili a runtime)
-- Sorgenti originali: **intatti** (non vengono toccati)
+- The `.py` `.js` `.mjs` `.ts` `.ps1` `.sh` files in your folder become **encrypted wrappers** in `dist/` (same subfolder structure)
+- The keyfile (if required) is created where you specified
+- Config files (`.env`, `.json`, `.yml`, `.sql`) remain **non-obfuscated** (they must be readable at runtime)
+- Original sources: **intact** (not touched)
 
-### Regole d'oro per il keyfile / password
+### Golden rules for the keyfile / password
 
-- **Keyfile**: NON metterlo dentro `dist/`, NON committarlo su git (`*.key` nel `.gitignore`), fanne backup
-- **Password**: usane una lunga (12+ caratteri, mix lettere/numeri/simboli)
-- Se perdi il keyfile E la password → **codice irrecuperabile per sempre**
+- **Keyfile**: do NOT put it inside `dist/`, do NOT commit it to git (`*.key` in `.gitignore`), back it up
+- **Password**: use a long one (12+ characters, mix of letters/numbers/symbols)
+- If you lose the keyfile AND the password → **code unrecoverable forever**
 
 ---
 
-## Come ESEGUIRE i file obfuscati
+## How to RUN obfuscated files
 
-Il file obfuscato si decifra **da solo** in memoria all'avvio e parte come un programma normale. Deve solo poter leggere le credenziali (keyfile o password) da variabile d'ambiente o dal filesystem.
+The obfuscated file decrypts **itself** in memory at startup and runs as a normal program. It only needs to be able to read the credentials (keyfile or password) from an environment variable or from the filesystem.
 
 ### Auth = keyfile
 
@@ -126,7 +126,7 @@ node dist/server.mjs
 bash dist/deploy.sh
 ```
 
-**Alternativa senza variabile**: copia il keyfile come `code-obf.key` nella cartella da cui lanci il programma (cwd), viene trovato automaticamente.
+**Alternative without an environment variable**: copy the keyfile as `code-obf.key` into the folder you launch the program from (cwd); it will be found automatically.
 
 ### Auth = password
 
@@ -148,17 +148,17 @@ $env:CODE_OBF_PASS = "la-mia-password-lunga"
 python dist\main.py
 ```
 
-Se manca **anche uno solo** → errore `[CODE-OBF] HMAC invalido`.
+If even one of them is missing → error `[CODE-OBF] HMAC invalido`.
 
 ---
 
-## Come DEOFUSCARE un file
+## How to DEOBFUSCATE a file
 
-Deofuscare significa: prendere un file obfuscato e **ricreare il sorgente originale** su disco (senza eseguirlo). Utile per debug o recupero.
+Deobfuscating means: taking an obfuscated file and **recreating the original source** on disk (without executing it). Useful for debugging or recovery.
 
-> ⚠️ **IMPORTANTE**: non puoi deofuscare il **keyfile stesso** — il keyfile è solo la chiave, non un file obfuscato. Deofusca solo file generati nella cartella `dist/`.
+> ⚠️ **IMPORTANT**: you cannot deobfuscate the **keyfile itself** — the keyfile is only the key, not an obfuscated file. Only deobfuscate files generated in the `dist/` folder.
 
-### Metodo consigliato — `deobf.ps1` (script dedicato)
+### Recommended method — `deobf.ps1` (dedicated script)
 
 ```powershell
 # Auth = keyfile
@@ -181,9 +181,9 @@ $env:CODE_OBF_PASS = "la-mia-password"
 .\deobf.ps1
 ```
 
-Lo script **rileva automaticamente** l'auth mode dal file e chiede solo le credenziali necessarie. Produce `<nome>.deobf.<ext>` accanto al file originale.
+The script **automatically detects** the auth mode from the file and only asks for the necessary credentials. It produces `<nome>.deobf.<ext>` next to the original file.
 
-### Metodo alternativo — via `obfuscate.ps1`
+### Alternative method — via `obfuscate.ps1`
 
 ```powershell
 .\obfuscate.ps1 -Mode deobfuscate `
@@ -192,103 +192,103 @@ Lo script **rileva automaticamente** l'auth mode dal file e chiede solo le crede
                 -Password "la-mia-password"
 ```
 
-Lo script rileva **automaticamente** l'auth mode dal file e chiede solo le credenziali necessarie.
+The script **automatically** detects the auth mode from the file and only asks for the necessary credentials.
 
-### Se la deofuscazione fallisce
+### If deobfuscation fails
 
-- `HMAC invalido` → keyfile/password sbagliati, o il file è stato manomesso
-- `File non riconosciuto` → stai deofuscando un file sbagliato (es. il keyfile stesso, o un file non prodotto da CODE-OBF)
-- `Keyfile non trovato` → path sbagliato o file cancellato
-
----
-
-## Quale modalità scegliere
-
-**Keyfile (random)** — il codice gira da solo in automatico (cron, servizio, container) perché il keyfile è sempre lì. Rischio: se rubano il file, rubano tutto.
-
-**Keyfile (password dentro)** — crei tu il file `.key` a mano scrivendoci una password invece dei 64 hex random. Lo script rileva che non è hex e applica PBKDF2 sulla password. Sicurezza = keyfile random.
-
-**Password digitata** — niente file, solo la tua memoria. Ideale per codice che lanci **tu a mano**. Se il codice deve girare headless, usa la variabile `CODE_OBF_PASS`.
-
-**Both (2FA)** — massima sicurezza, serve sia il file che la password. Usa questo per codice davvero critico.
+- `HMAC invalido` → wrong keyfile/password, or the file has been tampered with
+- `File non riconosciuto` → you're deobfuscating the wrong file (e.g. the keyfile itself, or a file not produced by CODE-OBF)
+- `Keyfile non trovato` → wrong path or file deleted
 
 ---
 
-## Il codice funziona ancora dopo l'obfuscazione?
+## Which mode to choose
 
-**Sì, identico.** Il wrapper decifra il sorgente in memoria all'avvio, poi il programma gira come se non fosse mai stato obfuscato.
+**Keyfile (random)** — the code runs automatically on its own (cron, service, container) because the keyfile is always there. Risk: if someone steals the file, they steal everything.
 
-### Cosa funziona identico
+**Keyfile (password inside)** — you create the `.key` file by hand, writing a password into it instead of 64 random hex characters. The script detects that it's not hex and applies PBKDF2 to the password. Security = random keyfile.
 
-- `import`, `require`, librerie esterne
-- File di config esterni (`.env`, `.json`, `.yml`, `.sql`)
-- Argomenti CLI (`sys.argv`, `process.argv`, `$args`)
-- Variabili d'ambiente, filesystem, rete, database
+**Typed password** — no file, just your memory. Ideal for code that **you launch by hand**. If the code needs to run headless, use the `CODE_OBF_PASS` variable.
+
+**Both (2FA)** — maximum security, requires both the file and the password. Use this for truly critical code.
+
+---
+
+## Does the code still work after obfuscation?
+
+**Yes, identically.** The wrapper decrypts the source in memory at startup, then the program runs as if it had never been obfuscated.
+
+### What works identically
+
+- `import`, `require`, external libraries
+- External config files (`.env`, `.json`, `.yml`, `.sql`)
+- CLI arguments (`sys.argv`, `process.argv`, `$args`)
+- Environment variables, filesystem, network, database
 - `if __name__ == "__main__"` in Python
 
-### Limitazioni note
+### Known limitations
 
-| Situazione | Problema | Soluzione |
+| Situation | Problem | Solution |
 |---|---|---|
-| Linter / debugger / coverage | Vedono il wrapper, non il sorgente | Usa i sorgenti originali in dev |
-| TypeScript type-checking | Il wrapper fa `new Function()`, tipi non verificati | Compila `.ts` → `.js` con `tsc`, poi obfusca |
-| `__file__` in Python | Punta al wrapper | Usa `os.path.dirname(sys.argv[0])` |
-| Node + password/both | Niente prompt sincrono senza deps | Usa `CODE_OBF_PASS` (env var) |
-| Bash grosso (>100 KB) | XOR in bash puro è lento | Riscrivi in Python |
-| Codice usato come libreria importata | `exec` nel namespace del wrapper | Per librerie, obfusca solo entry-point |
+| Linter / debugger / coverage | They see the wrapper, not the source | Use the original sources in dev |
+| TypeScript type-checking | The wrapper does `new Function()`, types not verified | Compile `.ts` → `.js` with `tsc`, then obfuscate |
+| `__file__` in Python | Points to the wrapper | Use `os.path.dirname(sys.argv[0])` |
+| Node + password/both | No synchronous prompt without deps | Use `CODE_OBF_PASS` (env var) |
+| Large Bash (>100 KB) | XOR in pure bash is slow | Rewrite in Python |
+| Code used as an imported library | `exec` in the wrapper's namespace | For libraries, only obfuscate the entry point |
 
 ### Performance
 
-- **Avvio**: ~0.1-0.5s (PBKDF2 200k iter + decrypt), trascurabile per programmi che girano secondi/minuti
-- **Runtime**: zero overhead dopo l'avvio
+- **Startup**: ~0.1-0.5s (PBKDF2 200k iter + decrypt), negligible for programs that run for seconds/minutes
+- **Runtime**: zero overhead after startup
 
 ---
 
-## Parametri CLI completi
+## Full CLI parameters
 
 ### `obfuscate.ps1`
 
-| Parametro | Default | Descrizione |
+| Parameter | Default | Description |
 |---|---|---|
-| `-Mode` | `obfuscate` | `obfuscate` o `deobfuscate` |
-| `-Auth` | *(chiede)* | `keyfile` / `password` / `both` |
-| `-ProjectPath` | *(chiede)* | Cartella sorgenti da obfuscare |
-| `-OutputPath` | `ProjectPath\dist` | Destinazione wrapper |
-| `-KeyFile` | *(chiede)* | Path del `.key` |
-| `-Password` | *(chiede)* | Password (sconsigliato in CLI, usa env var) |
-| `-FilePath` | *(chiede)* | In `deobfuscate`: file da decifrare |
+| `-Mode` | `obfuscate` | `obfuscate` or `deobfuscate` |
+| `-Auth` | *(prompts)* | `keyfile` / `password` / `both` |
+| `-ProjectPath` | *(prompts)* | Source folder to obfuscate |
+| `-OutputPath` | `ProjectPath\dist` | Wrapper destination |
+| `-KeyFile` | *(prompts)* | Path of the `.key` |
+| `-Password` | *(prompts)* | Password (not recommended in CLI, use env var) |
+| `-FilePath` | *(prompts)* | In `deobfuscate`: file to decrypt |
 
-### `deobf.ps1` (deobfuscator standalone)
+### `deobf.ps1` (standalone deobfuscator)
 
-| Parametro | Default | Descrizione |
+| Parameter | Default | Description |
 |---|---|---|
-| `-FilePath` | *(chiede)* | File obfuscato da decifrare |
-| `-KeyFile` | *(chiede se serve)* | Path del `.key` (solo per auth K/B) |
-| `-Password` | *(chiede se serve)* | Password (solo per auth P/B) |
+| `-FilePath` | *(prompts)* | Obfuscated file to decrypt |
+| `-KeyFile` | *(prompts if needed)* | Path of the `.key` (only for auth K/B) |
+| `-Password` | *(prompts if needed)* | Password (only for auth P/B) |
 
-Lo script legge l'auth mode dall'header del file e chiede solo le credenziali necessarie.
+The script reads the auth mode from the file's header and only asks for the necessary credentials.
 
-### Variabili d'ambiente
+### Environment variables
 
-| Variabile | Ruolo |
+| Variable | Role |
 |---|---|
-| `CODE_OBF_KEY` | Path del keyfile (a runtime, per auth K e B) |
-| `CODE_OBF_PASS` | Password (a runtime, per auth P e B; obbligatoria per Node/JS/TS) |
+| `CODE_OBF_KEY` | Path of the keyfile (at runtime, for auth K and B) |
+| `CODE_OBF_PASS` | Password (at runtime, for auth P and B; mandatory for Node/JS/TS) |
 
 ---
 
-## Cosa viene obfuscato / ignorato
+## What gets obfuscated / ignored
 
-| Obfuscato | Ignorato |
+| Obfuscated | Ignored |
 |---|---|
 | `.py` `.js` `.mjs` `.ts` `.ps1` `.sh` | `.venv` `node_modules` `dist` `.git` `__pycache__` `.mypy_cache` `build` `bin` `obj` |
-| Tutte le sottocartelle | File config (`.env`, `.yml`, `.json`, `.sql`, ecc.) |
+| All subfolders | Config files (`.env`, `.yml`, `.json`, `.sql`, etc.) |
 
 ---
 
-## Come funziona (tecnico)
+## How it works (technical)
 
-### Schema crittografico
+### Cryptographic scheme
 
 ```
 salt         = 16 bytes random (per-file, embedded nel wrapper)
@@ -309,7 +309,7 @@ ciphertext   = plaintext XOR keystream
 tag          = HMAC-SHA256(masterKey, iv || ciphertext)[:16]
 ```
 
-### Formato wrapper (metadata riga singola)
+### Wrapper format (single-line metadata)
 
 ```
 <comment> [CODE-OBF v3] <nomeFile> | auth=<K|P|B> | SHA256-CTR + HMAC + PBKDF2
@@ -317,34 +317,34 @@ tag          = HMAC-SHA256(masterKey, iv || ciphertext)[:16]
 <decoder nel linguaggio originale>
 ```
 
-### Perché è sicuro
+### Why it's secure
 
-- **Chiave non nel file**: senza keyfile/password un attaccante ha solo `salt`, `iv`, `ct`, `tag` — niente scorciatoie
-- **Bruteforce password**: PBKDF2 200k iter → ~100ms per tentativo → password robusta infattibile
-- **Bruteforce chiave**: 2²⁵⁶ tentativi → termodinamicamente impossibile
-- **Tamper detection**: HMAC rileva qualsiasi modifica al ciphertext
-- **Salt per-file**: rainbow tables inutili
+- **Key not in the file**: without the keyfile/password an attacker only has `salt`, `iv`, `ct`, `tag` — no shortcuts
+- **Password bruteforce**: PBKDF2 200k iter → ~100ms per attempt → a strong password is infeasible to crack
+- **Key bruteforce**: 2²⁵⁶ attempts → thermodynamically impossible
+- **Tamper detection**: HMAC detects any modification to the ciphertext
+- **Per-file salt**: rainbow tables useless
 
-### Limite onesto
+### An honest limitation
 
-Se un attaccante ha accesso alla macchina **mentre il codice è in esecuzione**, può dumpare la memoria. È un limite generale di tutti gli obfuscator software. Per protezione runtime serve hardware (TEE, enclave).
+If an attacker has access to the machine **while the code is running**, they can dump the memory. This is a general limitation of all software obfuscators. Runtime protection requires hardware (TEE, enclave).
 
 ---
 
-## Requisiti
+## Requirements
 
-**Lato obfuscator (solo tu):**
-- Windows 10/11 con PowerShell 5.1+
+**On the obfuscator side (only you):**
+- Windows 10/11 with PowerShell 5.1+
 
-**Lato esecuzione (chi esegue i file obfuscati):**
+**On the execution side (whoever runs the obfuscated files):**
 
-| Linguaggio | Runtime | Note |
+| Language | Runtime | Notes |
 |---|---|---|
-| `.py` | Python 3 | `hashlib`, `hmac`, `getpass` sono stdlib |
+| `.py` | Python 3 | `hashlib`, `hmac`, `getpass` are stdlib |
 | `.js` / `.mjs` | Node.js 14+ | `crypto` built-in; password via `CODE_OBF_PASS` |
-| `.ts` | Node + ts-node | stesso vincolo di JS |
-| `.ps1` | PowerShell 5.1+ | stdlib .NET |
-| `.sh` | bash + `openssl` + `xxd` + `python3` | `python3` usato solo per PBKDF2 |
+| `.ts` | Node + ts-node | same constraint as JS |
+| `.ps1` | PowerShell 5.1+ | .NET stdlib |
+| `.sh` | bash + `openssl` + `xxd` + `python3` | `python3` used only for PBKDF2 |
 
 ```powershell
 # Se PowerShell blocca lo script
